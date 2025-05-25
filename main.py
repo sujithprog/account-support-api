@@ -11,10 +11,13 @@ class AccountRequest(BaseModel):
     account_number: str
 
 @app.post("/validate/")
-def validate_account(data: AccountRequest):
-    if ACCOUNTS.get(data.account_number):
+def validate_account(data: dict):
+    account = data.get("account_number")
+    zip_code = data.get("zip_code")
+    
+    if ACCOUNTS.get(account) == zip_code:
         return {"status": "success", "message": "Account validated."}
-    return {"status": "failure", "message": "Invalid account number."}
+    return {"status": "failure", "message": "Invalid account or zip code."}
 
 @app.post("/balance/")
 def get_balance(data: AccountRequest):
